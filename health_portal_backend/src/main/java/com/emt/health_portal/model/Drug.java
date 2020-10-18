@@ -33,7 +33,6 @@ public class Drug {
     Integer quantity;
 
     @ManyToOne
-    @Column(nullable = false)
     Category category;
 
     @ManyToMany(mappedBy = "drugs")

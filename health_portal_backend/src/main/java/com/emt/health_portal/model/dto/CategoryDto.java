@@ -3,8 +3,8 @@ package com.emt.health_portal.model.dto;
 import lombok.Data;
 
 @Data
-public class UserLoginDto {
-    String username;
+public class CategoryDto {
+    String name;
 
-    String password;
+    String description;
 }

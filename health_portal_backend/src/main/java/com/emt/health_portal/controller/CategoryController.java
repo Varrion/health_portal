@@ -1,6 +1,7 @@
 package com.emt.health_portal.controller;
 
 import com.emt.health_portal.model.Category;
+import com.emt.health_portal.model.dto.CategoryDto;
 import com.emt.health_portal.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,16 @@ public class CategoryController {
     @GetMapping("{id}")
     Category getCategoryDetails(@PathVariable Long id) {
         return this.categoryService.findById(id);
+    }
+
+    @PostMapping
+    Category addCategory(@RequestBody CategoryDto categoryDto) {
+        return this.categoryService.addCategory(categoryDto);
+    }
+
+    @PutMapping("{id}")
+    Category editCategory(@RequestBody CategoryDto categoryDto, @PathVariable Long id) {
+        return this.categoryService.editCategory(id, categoryDto);
     }
 
     @DeleteMapping("{id}")

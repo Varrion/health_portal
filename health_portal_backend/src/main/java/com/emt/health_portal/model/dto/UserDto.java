@@ -1,6 +1,9 @@
 package com.emt.health_portal.model.dto;
 
-public class UserRegisterDto {
+import lombok.Data;
+
+@Data
+public class UserDto {
     String username;
 
     String password;
@@ -9,7 +12,7 @@ public class UserRegisterDto {
 
     String firstName;
 
-    String secondName;
+    String lastName;
 
     Boolean isCompanyOwner;
 }

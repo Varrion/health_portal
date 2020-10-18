@@ -24,7 +24,7 @@ public class User implements UserDetails {
 
     String firstName;
 
-    String secondName;
+    String lastName;
 
     Boolean isCompanyOwner;
 
@@ -69,11 +69,11 @@ public class User implements UserDetails {
                 getPassword().equals(user.getPassword()) &&
                 getEmail().equals(user.getEmail()) &&
                 getFirstName().equals(user.getFirstName()) &&
-                getSecondName().equals(user.getSecondName());
+                getLastName().equals(user.getLastName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUsername(), getPassword(), getEmail(), getFirstName(), getSecondName());
+        return Objects.hash(getUsername(), getPassword(), getEmail(), getFirstName(), getLastName());
     }
 }

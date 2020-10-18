@@ -1,7 +1,10 @@
 package com.emt.health_portal.model.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class DrugDto {
     String name;
 
