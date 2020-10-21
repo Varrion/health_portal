@@ -1,12 +1,15 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Card from "react-bootstrap/Card";
-import Link from "react-router-dom/modules/Link";
-import {LoginUser} from "../../services/UserService";
+import {BasicAuthToken, LoginUser} from "../../services/UserService";
+import {authContext} from "../../config/Authentication";
+import {useHistory} from "react-router-dom";
 
-function Login(props) {
+function SignIn(props) {
+    const {setAuthData} = useContext(authContext);
+    const history = useHistory();
     const [user, setUser] = useState({
         username: "",
         password: "",
@@ -20,7 +23,9 @@ function Login(props) {
         event.preventDefault();
         LoginUser(user)
             .then(res => {
-
+                setAuthData(BasicAuthToken(res.data.username, res.data.password));
+                sessionStorage.setItem("companyOwner", user.isCompanyOwner);
+                history.push(`/user/${res.data.username}`)
             })
             .catch(err => {
 
@@ -30,13 +35,15 @@ function Login(props) {
     return (
         <Card>
             <Card.Body className={"flex-column-center"}>
-                <h2 className="title-font mb-3">Login</h2>
+                <h1 className={"mb-5 text-center"}>Sign In</h1>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="formUsername">
                         <Form.Label>Username</Form.Label>
                         <InputGroup className="mb-2 mr-sm-2">
                             <InputGroup.Prepend>
-                                <InputGroup.Text><i className="far fa-user"/></InputGroup.Text>
+                                <InputGroup.Text>
+                                    <i className="fas fa-user"/>
+                                </InputGroup.Text>
                             </InputGroup.Prepend>
                             <Form.Control placeholder="Username"
                                           value={user.username} onChange={handleChange("username")}/>
@@ -56,9 +63,8 @@ function Login(props) {
 
                     <div className={"d-flex flex-column align-items-center"}>
                         <Button type="submit" className={"mb-3"}>
-                            Login
+                            Sign in
                         </Button>
-                        <p>Don't have an Account? <Link to={"/register"}> Register now </Link></p>
                     </div>
                 </Form>
             </Card.Body>
@@ -66,4 +72,4 @@ function Login(props) {
     )
 }
 
-export default Login;
+export default SignIn;

@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping(value = "/api/drug")
+@RequestMapping(value = "api/drug")
 public class DrugController {
     private final DrugService drugService;
     private final StripeService stripeService;

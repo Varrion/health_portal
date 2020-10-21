@@ -6,7 +6,7 @@ const AuthProvider = ({children}) => {
     const [auth, setAuth] = useState(null);
 
     const setAuthData = (data) => {
-        setAuth({...auth, data: data});
+        setAuth(data);
     };
 
     useEffect(() => {
@@ -14,7 +14,7 @@ const AuthProvider = ({children}) => {
     }, []);
 
     useEffect(() => {
-        sessionStorage.setItem('credentials', JSON.stringify(auth.data));
+        sessionStorage.setItem('userToken', auth ? JSON.stringify(auth) : null);
     }, [auth]);
 
     return (

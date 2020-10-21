@@ -2,6 +2,7 @@ package com.emt.health_portal.service;
 
 import com.emt.health_portal.model.User;
 import com.emt.health_portal.model.dto.UserDto;
+import com.emt.health_portal.model.dto.UserLoginDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,4 +13,6 @@ public interface UserService extends BaseService<User, String>, UserDetailsServi
     User addUser(UserDto userDto, MultipartFile userPicture) throws IOException;
 
     User editUser(String username, UserDto userDto, MultipartFile userPicture) throws IOException;
+
+    User signInUser(UserLoginDto userDto);
 }

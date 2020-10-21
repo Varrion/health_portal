@@ -1,21 +1,24 @@
 import Form from 'react-bootstrap/Form'
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import {RegisterUser} from "../../services/UserService";
+import {BasicAuthToken, RegisterUser} from "../../services/UserService";
+import Dropzone from "react-dropzone";
+import {useHistory} from "react-router-dom";
+import "./User.css";
+import {authContext} from "../../config/Authentication";
 
-function Register() {
-
+function SignUp() {
+    const { setAuthData } = useContext(authContext);
+    const history = useHistory();
     const initialUser = {
         username: '',
         password: '',
-        name: '',
-        surname: '',
-        address: '',
-        city: '',
         email: '',
-        isSeller: false
+        firstName: '',
+        lastName: '',
+        isCompanyOwner: false
     }
 
     const [user, setUser] = useState(initialUser);
@@ -23,17 +26,12 @@ function Register() {
     const [userPhoto, setUserPhoto] = useState(null);
 
     const handleChange = name => event => {
-        if (name !== "isSeller") {
+        if (name !== "isCompanyOwner") {
             setUser({...user, [name]: event.target.value});
         } else {
             setUser({...user, [name]: event.target.checked});
         }
     };
-
-    const handleDrop = event => {
-        let file = event.target.files[0];
-        setUserPhoto(file);
-    }
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -46,36 +44,43 @@ function Register() {
 
         RegisterUser(formData)
             .then(r => {
-
+                setAuthData(BasicAuthToken(user.username, user.password));
+                sessionStorage.setItem("companyOwner", user.isCompanyOwner);
+                history.push(`/user/${r.data.username}`)
             })
             .catch(err => {
 
             })
     };
 
-
     return (
         <Card>
-            <Card.Body className={"flex-column-center"}>
-                <h2 className="title-font mb-4">Register</h2>
-                <Form onSubmit={handleSubmit} style={{width: '-webkit-fill-available'}}>
+            <Card.Body>
+                <h1 className={"mb-5 text-center"}>Sign up</h1>
+                <Form onSubmit={handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col} controlId="formUserFirstName">
                             <Form.Label>First Name</Form.Label>
-                            <Form.Control value={user.name} onChange={handleChange("name")} type="text"
-                                          placeholder="Enter your first name"/>
+                            <Form.Control value={user.firstName} onChange={handleChange("firstName")}
+                                          placeholder="Enter your first name here"/>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formUserLastName">
                             <Form.Label>Last Name</Form.Label>
-                            <Form.Control value={user.surname} onChange={handleChange("surname")} type="text"
-                                          placeholder="Enter your last name"/>
+                            <Form.Control value={user.lastName} onChange={handleChange("lastName")}
+                                          placeholder="Enter your last name here"/>
                         </Form.Group>
                     </Form.Row>
 
+                    <Form.Group controlId="formIsSeller">
+                        <Form.Check value={user.isCompanyOwner} onChange={handleChange("isCompanyOwner")}
+                                    type="switch"
+                                    label="Are you a drug manufacturer?"/>
+                    </Form.Group>
+
                     <Form.Group controlId="formUsername">
                         <Form.Label>Username</Form.Label>
-                        <Form.Control value={user.username} onChange={handleChange("username")} type="text"
+                        <Form.Control value={user.username} onChange={handleChange("username")}
                                       placeholder="Enter your username"/>
                     </Form.Group>
 
@@ -86,7 +91,7 @@ function Register() {
                     </Form.Group>
 
                     <Form.Group controlId="formUserEmail">
-                        <Form.Label>Email address</Form.Label>
+                        <Form.Label>Email</Form.Label>
                         <Form.Control value={user.email} onChange={handleChange("email")} type="email"
                                       placeholder="Enter your email address"/>
                         <Form.Text className="text-muted">
@@ -94,32 +99,19 @@ function Register() {
                         </Form.Text>
                     </Form.Group>
 
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="formUserAddress">
-                            <Form.Label>Address</Form.Label>
-                            <Form.Control value={user.address} onChange={handleChange("address")} type="text"
-                                          placeholder="Enter your address"/>
-                        </Form.Group>
-
-                        <Form.Group as={Col} controlId="formUserCity">
-                            <Form.Label>City</Form.Label>
-                            <Form.Control value={user.city} onChange={handleChange("city")} type="text"
-                                          placeholder="Enter your city"/>
-                        </Form.Group>
-                    </Form.Row>
-
-                    <Form.Group controlId="formIsSeller">
-                        <Form.Check value={user.isSeller} onChange={handleChange("isSeller")}
-                                    type="switch"
-                                    label="Seller"/>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.File id="formCustomerPicture" onChange={handleDrop} label="Photo"/>
-                    </Form.Group>
-                    <div className="row justify-content-center">
+                    <Dropzone onDrop={acceptedFiles => setUserPhoto(acceptedFiles[0])} className={"customDropzone"}>
+                        {({getRootProps, getInputProps}) => (
+                            <section>
+                                <div {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    <p>Drag 'n' drop some files here, or click to select files</p>
+                                </div>
+                            </section>
+                        )}
+                    </Dropzone>
+                    <div>
                         <Button variant="primary" type="submit">
-                            Register
+                            Sign Up
                         </Button>
                     </div>
                 </Form>
@@ -128,4 +120,4 @@ function Register() {
     )
 }
 
-export default Register;
+export default SignUp;

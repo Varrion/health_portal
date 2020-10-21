@@ -2,6 +2,7 @@ package com.emt.health_portal.service.impl;
 
 import com.emt.health_portal.model.User;
 import com.emt.health_portal.model.dto.UserDto;
+import com.emt.health_portal.model.dto.UserLoginDto;
 import com.emt.health_portal.repository.UserRepository;
 import com.emt.health_portal.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(String id) {
-        return userRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userRepository.findById(s).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return userRepository.findById(s).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDto.getUsername());
         user.setIsCompanyOwner(userDto.getIsCompanyOwner());
 
-        mapDtoToEntityUser(user,userDto);
+        mapDtoToEntityUser(user, userDto);
         return userRepository.save(user);
     }
 
@@ -65,6 +66,11 @@ public class UserServiceImpl implements UserService {
         }
         mapDtoToEntityUser(user, userDto);
         return userRepository.save(user);
+    }
+
+    @Override
+    public User signInUser(UserLoginDto userDto) {
+        return userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPassword()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     private void mapDtoToEntityUser(User user, UserDto userDto) {
