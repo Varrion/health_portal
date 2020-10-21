@@ -7,3 +7,24 @@ body {
 .App > .card {
     border-radius: 30px;
 }
+
+.dashboardImage {
+    background-image: url("assets/good-for-all-pharmacy.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 350px;
+}
+
+.customHeader {
+    background-color: cornflowerblue !important;
+}
+
+.borderless {
+    border-top: 0 none;
+}
+
+.listItem {
+    border-top: 0 none;
+    border-left: 0 none;
+    border-right: 0 none;
+}

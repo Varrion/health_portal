@@ -29,7 +29,7 @@ function Header(props) {
     }
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar className={"customHeader"} collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Link className={"navbar-brand"} to={"/"}>Health Portal</Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
             <Navbar.Collapse id="responsive-navbar-nav">
