@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
-function AddEditCategory(props) {
+function AddUpdateCategory(props) {
     const history = useHistory();
     const [category, setCategory] = useState({
         name: "",
@@ -61,4 +61,4 @@ function AddEditCategory(props) {
     )
 }
 
-export default AddEditCategory;
+export default AddUpdateCategory;

@@ -8,6 +8,38 @@ body {
     border-radius: 30px;
 }
 
+.rounded-content {
+    border-radius: 20px;
+}
+
+.customDropzone {
+    border: 1px dashed cornflowerblue;
+}
+
+.image-fit {
+    object-fit: cover;
+}
+
+.scrolling-list {
+    overflow-y: scroll;
+    height: 380px;
+}
+
+.image-top-rounded {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.image-bottom-rounded {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.App > .card .btn {
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
 .dashboardImage {
     background-image: url("assets/good-for-all-pharmacy.jpg");
     background-repeat: no-repeat;

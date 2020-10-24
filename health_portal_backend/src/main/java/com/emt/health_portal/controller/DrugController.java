@@ -33,6 +33,12 @@ public class DrugController {
         return this.drugService.findAll();
     }
 
+    @GetMapping("category/{categoryId}")
+    List<Drug> getDrugsByCategory(@PathVariable Long categoryId) {
+        return drugService.getDrugsByCategory(categoryId);
+    }
+
+
     @GetMapping("{id}")
     Drug getDrugDetails(@PathVariable Long id) {
         return this.drugService.findById(id);

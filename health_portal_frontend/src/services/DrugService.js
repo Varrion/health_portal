@@ -4,6 +4,10 @@ async function GetAllDrugs() {
     return axios.get("drug");
 }
 
+async function GetAllDrugsByCategory(categoryId) {
+    return axios.get(`drug/category/${categoryId}`)
+}
+
 async function GetDrugDetails(drugId) {
     return axios.get(`drug/${drugId}`);
 }
@@ -20,4 +24,6 @@ async function DeleteDrug(drugId) {
     return axios.delete(`drug/${drugId}`);
 }
 
-export {GetAllDrugs, GetDrugDetails, AddDrug, EditDrug, DeleteDrug}
+const Illness = ["Allergies", "ColdsAndFlu", "Diarrhea", "Headaches", "Mononucleosis", "StomachAches", "Covid", "Diabetes", "Cancer", "Injuries"]
+
+export {GetAllDrugs, GetAllDrugsByCategory, GetDrugDetails, AddDrug, EditDrug, DeleteDrug, Illness}

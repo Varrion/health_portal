@@ -14,7 +14,7 @@ const AuthProvider = ({children}) => {
     }, []);
 
     useEffect(() => {
-        sessionStorage.setItem('userToken', auth ? JSON.stringify(auth) : null);
+        sessionStorage.setItem('userToken', auth !== null ? JSON.stringify(auth) : null);
     }, [auth]);
 
     return (

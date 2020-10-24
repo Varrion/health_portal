@@ -6,14 +6,17 @@ import CompanyDetails from "./pages/company/CompanyDetails";
 import Header from "./components/Header";
 import SignIn from "./pages/user/SignIn";
 import SignUp from "./pages/user/SignUp";
-import AddEditCategory from "./pages/category/AddEditCategory";
+import AddUpdateCategory from "./pages/category/AddUpdateCategory";
 import {GetUserDetails} from "./services/UserService";
 import {authContext} from "./config/Authentication";
 import PrivateRoute from "./config/PrivateRoute";
+import CategoryDetails from "./pages/category/CategoryDetails";
+import UserDetails from "./pages/user/UserDetails";
+import AddUpdateCompany from "./pages/company/AddUpdateCompany";
+import DrugDetails from "./pages/drug/DrugDetails";
 
 function App() {
     const [user, setUser] = useState(null);
-
     const {auth} = useContext(authContext);
 
     const getUsernameFromSession = userToken => {
@@ -27,7 +30,7 @@ function App() {
             const username = getUsernameFromSession(auth);
             GetUserDetails(username)
                 .then(res => {
-                    setUser(res.data)
+                    setUser(res.data);
                 })
         }
     }, [auth])
@@ -38,23 +41,29 @@ function App() {
             <div className="container mt-4 mb-4 App">
                 <Switch>
                     <Route path={"/login"}>
-                        <SignIn/>
+                        {!user ? <SignIn/> : <Redirect to={"/"}/>}
                     </Route>
                     <Route path={"/register"}>
-                        <SignUp/>
+                        {!user ? <SignUp/> : <Redirect to={"/"}/>}
                     </Route>
-                    <Route path={"/company/:companyId"}>
+                    <PrivateRoute exact path={"/company/add"} component={AddUpdateCompany}/>
+                    <Route exact path={"/company/:companyId"}>
                         <CompanyDetails/>
                     </Route>
-                    <PrivateRoute path={"/category/add"}>
-                        <AddEditCategory/>
-                    </PrivateRoute>
-                    <PrivateRoute path={"/category/edit"}>
-                        <AddEditCategory/>
-                    </PrivateRoute>
+                    <Route exact path={"/drug/:drugId"}>
+                        <DrugDetails profile={user}/>
+                    </Route>
+                    <PrivateRoute exact path={"/category/add"} component={AddUpdateCategory}/>
+                    <Route exact path={"/category/:categoryId"}>
+                        <CategoryDetails profile={user}/>
+                    </Route>
+                    <PrivateRoute exact path={"/category/:categoryId/edit"} component={AddUpdateCategory}/>
+                    <Route exact path={"/user/:username"}>
+                        <UserDetails/>
+                    </Route>
                     <Route path="*">
                         <Redirect to={"/"}/>
-                        <Dashboard/>
+                        <Dashboard profile={user}/>
                     </Route>
                 </Switch>
             </div>

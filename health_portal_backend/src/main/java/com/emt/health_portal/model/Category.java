@@ -1,5 +1,6 @@
 package com.emt.health_portal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Category {
     String description;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     Set<Drug> drugs;
 
     @Override

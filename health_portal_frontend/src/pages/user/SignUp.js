@@ -6,22 +6,20 @@ import Card from "react-bootstrap/Card";
 import {BasicAuthToken, RegisterUser} from "../../services/UserService";
 import Dropzone from "react-dropzone";
 import {useHistory} from "react-router-dom";
-import "./User.css";
 import {authContext} from "../../config/Authentication";
 
 function SignUp() {
-    const { setAuthData } = useContext(authContext);
+    const {setAuthData} = useContext(authContext);
     const history = useHistory();
-    const initialUser = {
+
+    const [user, setUser] = useState({
         username: '',
         password: '',
         email: '',
         firstName: '',
         lastName: '',
         isCompanyOwner: false
-    }
-
-    const [user, setUser] = useState(initialUser);
+    });
 
     const [userPhoto, setUserPhoto] = useState(null);
 
@@ -45,8 +43,8 @@ function SignUp() {
         RegisterUser(formData)
             .then(r => {
                 setAuthData(BasicAuthToken(user.username, user.password));
-                sessionStorage.setItem("companyOwner", user.isCompanyOwner);
-                history.push(`/user/${r.data.username}`)
+                history.push(`/user/${r.data.username}`);
+                window.location.reload();
             })
             .catch(err => {
 
@@ -104,7 +102,13 @@ function SignUp() {
                             <section>
                                 <div {...getRootProps()}>
                                     <input {...getInputProps()} />
-                                    <p>Drag 'n' drop some files here, or click to select files</p>
+                                    {userPhoto ?
+                                        <img
+                                            className={"image-fit"}
+                                            src={typeof userPhoto === "string" ? "data:image/jpeg;base64," + userPhoto : URL.createObjectURL(userPhoto)}
+                                            width={"100%"} height={250}/> :
+                                        <p>Drag 'n' drop some files here, or click to select files</p>
+                                    }
                                 </div>
                             </section>
                         )}

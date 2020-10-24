@@ -6,10 +6,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import AuthProvider from "./config/Authentication";
+import {ToastProvider} from 'react-toast-notifications'
 
 ReactDOM.render(
     <AuthProvider>
-        <App/>
+        <ToastProvider autoDismiss autoDismissTimeout={4000} placement={"bottom-right"}>
+            <App/>
+        </ToastProvider>
     </AuthProvider>,
     document.getElementById('root')
 )

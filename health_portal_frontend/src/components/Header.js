@@ -3,9 +3,8 @@ import React, {useContext, useEffect, useState} from "react";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {GetAllCompanies} from "../services/CompanyService";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {authContext} from "../config/Authentication";
-import {useHistory} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import renderTooltip from "./ToolTip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -42,7 +41,7 @@ function Header(props) {
                         <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                         {props.loggedUser && props.loggedUser.isCompanyOwner && <>
                             <NavDropdown.Divider/>
-                            <Link className={"dropdown-item"} to={"/category/add"}>Add category</Link>
+                            <Link className={"dropdown-item"} to={"/company/add"}>Your company</Link>
                         </>}
                     </NavDropdown>
                 </Nav>

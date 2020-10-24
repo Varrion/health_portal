@@ -20,7 +20,5 @@ public class DrugDto {
 
     Long categoryId;
 
-    String[] companies;
-
     String cures;
 }

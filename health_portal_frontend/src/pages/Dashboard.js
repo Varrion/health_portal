@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {GetAllDrugs} from "../services/DrugService";
 import {GetAllCategories} from "../services/CategoryService";
-import {Link} from "react-router-dom";
-import {Button} from "react-bootstrap";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import DrugMediaItem from "../components/DrugMediaItem";
 
 function Dashboard(props) {
     const history = useHistory();
     const [drugs, setDrugs] = useState(null);
-    const [categories, setCategires] = useState(null);
+    const [categories, setCategories] = useState(null);
 
     useEffect(() => {
         GetAllDrugs()
@@ -18,7 +17,7 @@ function Dashboard(props) {
 
         GetAllCategories()
             .then(res => {
-                setCategires(res.data)
+                setCategories(res.data)
             })
     }, [])
 
@@ -26,9 +25,17 @@ function Dashboard(props) {
         <>
             <div className={"dashboardImage"}>
             </div>
+            <hr width={"65%"}/>
             <div className={"row mt-2"}>
                 <div className={"col-md-9"}>
-
+                    <ul className="list-unstyled scrolling-list">
+                        {drugs && drugs.length > 0 && drugs.map(drug =>
+                            <DrugMediaItem key={drug.id}
+                                           picture={drug.picture}
+                                           id={drug.id}
+                                           title={drug.name}
+                                           text={drug.description}/>)}
+                    </ul>
                 </div>
                 <div className={"col-md-3"}>
                     <div className={"list-group"}>
@@ -38,8 +45,10 @@ function Dashboard(props) {
                                       to={`/category/${category.id}`}>{category.name} </Link>)
                             : <p>No categories have been added yet. Add some</p>
                         }
-                        <Button onClick={() => history.push("/category/add")} variant={"outline-primary"}>
-                            <i className="fas fa-plus-circle"/> Add category</Button>
+                        {props.profile && props.profile.isCompanyOwner &&
+                        <Link className={"btn btn-outline-primary"} to={"/category/add"}>
+                            <i className="fas fa-plus-circle"/> Add category
+                        </Link>}
                     </div>
                 </div>
             </div>

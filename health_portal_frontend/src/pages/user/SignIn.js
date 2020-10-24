@@ -24,8 +24,8 @@ function SignIn(props) {
         LoginUser(user)
             .then(res => {
                 setAuthData(BasicAuthToken(res.data.username, res.data.password));
-                sessionStorage.setItem("companyOwner", user.isCompanyOwner);
-                history.push(`/user/${res.data.username}`)
+                history.push(`/user/${res.data.username}`);
+                window.location.reload();
             })
             .catch(err => {
 

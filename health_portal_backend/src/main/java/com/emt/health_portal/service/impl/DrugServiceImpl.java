@@ -1,10 +1,12 @@
 package com.emt.health_portal.service.impl;
 
+import com.emt.health_portal.model.Category;
 import com.emt.health_portal.model.Drug;
 import com.emt.health_portal.model.dto.ChargeRequest;
 import com.emt.health_portal.model.dto.DrugDto;
 import com.emt.health_portal.model.enums.Illness;
 import com.emt.health_portal.repository.DrugRepository;
+import com.emt.health_portal.service.CategoryService;
 import com.emt.health_portal.service.DrugService;
 import com.emt.health_portal.service.StripeService;
 import com.stripe.Stripe;
@@ -25,6 +27,7 @@ import java.util.Map;
 @Service
 public class DrugServiceImpl implements DrugService, StripeService {
     private final DrugRepository drugRepository;
+    private final CategoryService categoryService;
 
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
@@ -34,8 +37,9 @@ public class DrugServiceImpl implements DrugService, StripeService {
         Stripe.apiKey = secretKey;
     }
 
-    public DrugServiceImpl(DrugRepository drugRepository) {
+    public DrugServiceImpl(DrugRepository drugRepository, CategoryService categoryService) {
         this.drugRepository = drugRepository;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -57,6 +61,9 @@ public class DrugServiceImpl implements DrugService, StripeService {
     public Drug addDrug(DrugDto drugDto, MultipartFile drugPicture) throws IOException {
         Drug drug = new Drug();
 
+        Category category = categoryService.findById(drugDto.getCategoryId());
+        drug.setCategory(category);
+
         if (drugPicture != null) {
             drug.setPicture(drugPicture.getBytes());
         }
@@ -74,6 +81,16 @@ public class DrugServiceImpl implements DrugService, StripeService {
         }
 
         mapDtoToEntityDrug(drug, drugDto);
+        return drugRepository.save(drug);
+    }
+
+    @Override
+    public List<Drug> getDrugsByCategory(Long categoryId) {
+        return drugRepository.findAllByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Drug> getDrugsByCompany(Long companyId) {
         return null;
     }
 
