@@ -25,6 +25,11 @@ public class CompanyController {
         return this.companyService.findAll();
     }
 
+    @GetMapping("owner/{username}")
+    Company getByCompanyOwner(@PathVariable String username) {
+        return this.companyService.findByCompanyOwner(username);
+    }
+
     @GetMapping("{id}")
     Company getCompanyDetails(@PathVariable Long id) {
         return this.companyService.findById(id);
@@ -37,11 +42,16 @@ public class CompanyController {
 
     @PutMapping("{id}")
     Company editCompany(@PathVariable Long id, @RequestPart("companyDto") CompanyDto companyDto, @RequestPart("companyPicture") Optional<MultipartFile> companyPicture) throws IOException {
-        return companyService.editCompany(id,companyDto,companyPicture.orElse(null));
+        return companyService.editCompany(id, companyDto, companyPicture.orElse(null));
     }
 
     @DeleteMapping("{id}")
     void deleteCompanyDetails(@PathVariable Long id) {
         companyService.deleteById(id);
+    }
+
+    @PostMapping("drugs")
+    Company updateCompanyDrugs(@RequestParam(value = "username") String username, @RequestParam(value = "drugId") Long drugId) {
+        return companyService.updateCompanyDrug(username, drugId);
     }
 }

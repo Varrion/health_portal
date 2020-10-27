@@ -5,8 +5,10 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
+import {useToasts} from "react-toast-notifications";
 
 function AddUpdateCategory(props) {
+    const {addToast} = useToasts();
     const history = useHistory();
     const [category, setCategory] = useState({
         name: "",
@@ -22,7 +24,7 @@ function AddUpdateCategory(props) {
         AddCategory(category)
             .then(res => {
                 history.push(`/category/${res.data.id}`)
-                window.location.reload();
+                addToast("successfully created category", {appearance: "success"})
             })
     };
 
@@ -50,8 +52,8 @@ function AddUpdateCategory(props) {
                         </InputGroup>
                     </Form.Group>
 
-                    <div>
-                        <Button type="submit" className={"mb-3"}>
+                    <div className={"text-right"}>
+                        <Button variant={"outline-primary"} type="submit" className={"mb-3"}>
                             Add Category
                         </Button>
                     </div>

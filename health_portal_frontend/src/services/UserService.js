@@ -1,5 +1,7 @@
 import axios from "../config/Axios"
 
+const StripePublicKey = 'pk_test_51HgVU1Eh03jxvTygGkKTQKLEWHd1DKEbpzkkaE2dlMTAOlLPkrFDIXeVW5C6l6Zd6paGMPPkhICFxtNCYOpuScwR00DxY9Tyop';
+
 async function GetAllUsers() {
     return axios.get("user");
 }
@@ -28,4 +30,4 @@ const BasicAuthToken = (username, password) => {
     return 'Basic ' + window.btoa(username + ":" + password)
 }
 
-export {RegisterUser, LoginUser, GetAllUsers, GetUserDetails, EditUser, DeleteUser, BasicAuthToken}
+export {RegisterUser, LoginUser, GetAllUsers, GetUserDetails, EditUser, DeleteUser, BasicAuthToken, StripePublicKey}

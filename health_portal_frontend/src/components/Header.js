@@ -2,7 +2,7 @@ import Navbar from "react-bootstrap/Navbar";
 import React, {useContext, useEffect, useState} from "react";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import {GetAllCompanies} from "../services/CompanyService";
+import {GetAllCompanies, GetCompanyByOwner} from "../services/CompanyService";
 import {Link, useHistory} from "react-router-dom";
 import {authContext} from "../config/Authentication";
 import Button from "react-bootstrap/Button";
@@ -11,15 +11,22 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 function Header(props) {
     const {setAuthData} = useContext(authContext)
-    const history = useHistory("/")
+    const history = useHistory("/");
+    const [myCompany, setMyCompany] = useState(null);
     const [companies, setCompanies] = useState(null);
 
     useEffect(() => {
+        if (props.profile && props.profile.isCompanyOwner) {
+            GetCompanyByOwner(props.profile.username)
+                .then(res => {
+                    setMyCompany(res.data);
+                })
+        }
         GetAllCompanies()
             .then(res => {
                 setCompanies(res.data)
             })
-    }, [])
+    }, [props.profile])
 
     const logoutUser = () => {
         setAuthData(null);
@@ -35,32 +42,34 @@ function Header(props) {
                 <Nav className="mr-auto">
                     <NavDropdown title="Companies" id="collasible-nav-dropdown">
                         {companies && companies.length > 0 && companies.map(company =>
-                            <Link className={"dropdown-item"} to={`/company/${company.id}`}>{company.name}</Link>
+                            <Link key={company.id} className={"dropdown-item"}
+                                  to={`/company/${company.id}`}>{company.name}</Link>
                         )}
-                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                        {props.loggedUser && props.loggedUser.isCompanyOwner && <>
+                        {props.profile && props.profile.isCompanyOwner && <>
                             <NavDropdown.Divider/>
-                            <Link className={"dropdown-item"} to={"/company/add"}>Your company</Link>
+                            {myCompany
+                                ? <Link className={"dropdown-item"} to={`/company/${myCompany.id}`}>Your company</Link>
+                                : <Link className={"dropdown-item"} to={"/company/admin"}>Add company</Link>
+                            }
                         </>}
                     </NavDropdown>
                 </Nav>
                 <Nav>
-                    {!props.loggedUser
+                    {!props.profile
                         ? <>
-                            <Link className={"nav-link"} to={"/login"}>Login</Link>
-                            <Link className={"nav-link"} to={"/register"}>Register</Link>
+                            <Link className={"nav-link"} to={"/login"}>Sign In</Link>
+                            <Link className={"nav-link"} to={"/register"}>Sign Up</Link>
                         </>
                         : <>
                             <Link className={"nav-link"}
-                                  to={`/user/${props.loggedUser.username}`}>
+                                  to={`/user/${props.profile.username}`}>
                                 <i className="fas fa-user-circle"/>
-                                <span> {props.loggedUser.firstName}</span>
+                                <span> {props.profile.firstName}</span>
                             </Link>
                             <OverlayTrigger
                                 placement="bottom"
                                 delay={{show: 250, hide: 400}}
-                                overlay={renderTooltip("logout")}
+                                overlay={renderTooltip("Sign Out")}
                             >
                                 <Button variant={"link"} onClick={logoutUser} className={"nav-link"}>
                                     <i className="fas fa-sign-out-alt"/></Button>

@@ -15,4 +15,6 @@ public interface UserService extends BaseService<User, String>, UserDetailsServi
     User editUser(String username, UserDto userDto, MultipartFile userPicture) throws IOException;
 
     User signInUser(UserLoginDto userDto);
+
+    void saveUser(User user);
 }

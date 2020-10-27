@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface DrugRepository extends JpaRepository<Drug, Long> {
@@ -15,5 +16,5 @@ public interface DrugRepository extends JpaRepository<Drug, Long> {
     List<Drug> findAllByCategoryId(Long categoryId);
 
     @Transactional
-    List<Drug> findAllByCompaniesIs(Company company);
+    List<Drug> findAllByCompaniesIn(Set<Company> company);
 }

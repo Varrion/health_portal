@@ -1,23 +1,24 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
-import {AddCompany} from "../../services/CompanyService";
+import {AddCompany, DeleteCompany, EditCompany, GetCompanyByOwner} from "../../services/CompanyService";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import Dropzone from "react-dropzone";
 
 function AddUpdateCompany(props) {
     const history = useHistory();
+    const [companyId, setCompanyId] = useState(null);
     const [company, setCompany] = useState({
         name: "",
         description: "",
         address: "",
         city: "",
         createdOn: new Date(),
-        companyOwner: props.owner
+        companyOwner: props.profile.username ?? null
     });
 
     const [companyPicture, setCompanyPicture] = useState(null);
@@ -25,18 +26,63 @@ function AddUpdateCompany(props) {
         setCompany({...company, createdOn: date})
     }
 
+    useEffect(() => {
+        if (props.profile.isCompanyOwner) {
+            GetCompanyByOwner(props.profile.username)
+                .then(res => {
+                    if (res.data.id) {
+                        setCompanyId(res.data.id);
+                        setCompany({
+                            createdOn: new Date(res.data.createdOn),
+                            address: res.data.address,
+                            city: res.data.city,
+                            description: res.data.description,
+                            name: res.data.name,
+                            companyOwner: res.data.companyOwner.username
+                        });
+                        setCompanyPicture(res.data.picture);
+                    }
+                })
+        } else {
+            history.push("/")
+        }
+    }, [])
+
     const handleChange = name => event => {
         setCompany({...company, [name]: event.target.value});
     };
 
     const handleSubmit = event => {
         event.preventDefault();
-        AddCompany(company)
-            .then(res => {
-                history.push(`/company/${res.data.id}`)
+        console.log(company)
+        const formData = new FormData();
+        formData.append("companyDto", new Blob([JSON.stringify({...company})], {
+            type: "application/json"
+        }));
+        formData.append("companyPicture", companyPicture);
+
+        if (!companyId) {
+            AddCompany(formData)
+                .then(res => {
+                    history.push(`/company/${res.data.id}`)
+                    window.location.reload();
+                })
+        } else {
+            EditCompany(companyId, formData)
+                .then(res => {
+                    history.push(`/company/${res.data.id}`)
+                    window.location.reload();
+                })
+        }
+    };
+
+    const handleDelete = () => {
+        DeleteCompany(companyId)
+            .then(() => {
+                history.push("/");
                 window.location.reload();
             })
-    };
+    }
 
     return (
         <Card>
@@ -95,7 +141,11 @@ function AddUpdateCompany(props) {
                                 <div {...getRootProps()}>
                                     <input {...getInputProps()} />
                                     {
-                                        companyPicture ? companyPicture.name :
+                                        companyPicture ?
+                                            <img
+                                                className={"image-fit"}
+                                                src={typeof companyPicture === "string" ? "data:image/jpeg;base64," + companyPicture : URL.createObjectURL(companyPicture)}
+                                                width={"100%"} height={250}/> :
                                             <p>Drag 'n' drop some files here, or click to select files</p>
                                     }
                                 </div>
@@ -103,10 +153,15 @@ function AddUpdateCompany(props) {
                         )}
                     </Dropzone>
 
-                    <div>
-                        <Button type="submit" className={"mb-3"}>
-                            Add Company
+                    <div className={"text-center mt-4 mb-3"}>
+                        <Button type="submit" variant={"outline-primary"}>
+                            {companyId ? "Edit" : "Add"} Company
                         </Button>
+                        {companyId &&
+                        <Button onClick={handleDelete} type="submit" variant={"outline-danger"} className={"ml-3"}>
+                            Delete Company
+                        </Button>}
+
                     </div>
                 </Form>
             </Card.Body>

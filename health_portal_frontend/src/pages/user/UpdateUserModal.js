@@ -3,10 +3,12 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Dropzone from "react-dropzone";
 import Button from "react-bootstrap/Button";
-import React, {useState} from "react";
-import {EditUser} from "../../services/UserService";
+import React, {useContext, useState} from "react";
+import {BasicAuthToken, EditUser} from "../../services/UserService";
+import {authContext} from "../../config/Authentication";
 
 function UpdateUserModal(props) {
+    const {setAuthData} = useContext(authContext);
     const [user, setUser] = useState({
         username: props.profile.username ?? "",
         password: props.profile.password ?? "",
@@ -31,7 +33,10 @@ function UpdateUserModal(props) {
         formData.append("userPicture", userPhoto);
 
         EditUser(props.profile.username, formData)
-            .then(() => window.location.reload())
+            .then(res => {
+                setAuthData(BasicAuthToken(res.data.username, res.data.password));
+                window.location.reload()
+            })
     };
 
     return (
@@ -87,7 +92,7 @@ function UpdateUserModal(props) {
                                             <img
                                                 className={"image-fit"}
                                                 src={typeof userPhoto === "string" ? "data:image/jpeg;base64," + userPhoto : URL.createObjectURL(userPhoto)}
-                                                width={"100%"} height={250}/> :
+                                                width={"100%"} height={250} alt={"user"}/> :
                                             <p>Drag 'n' drop some files here, or click to select files</p>
                                     }
                                 </div>

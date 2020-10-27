@@ -8,7 +8,11 @@ import java.io.IOException;
 
 public interface CompanyService extends BaseService<Company, Long> {
 
+    Company findByCompanyOwner(String username);
+
     Company addCompany(CompanyDto companyDto, MultipartFile companyPicture) throws IOException;
 
     Company editCompany(Long id, CompanyDto companyDto, MultipartFile companyPicture) throws IOException;
+
+    Company updateCompanyDrug(String username, Long drugId);
 }

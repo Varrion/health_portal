@@ -6,8 +6,10 @@ import Card from "react-bootstrap/Card";
 import {BasicAuthToken, LoginUser} from "../../services/UserService";
 import {authContext} from "../../config/Authentication";
 import {useHistory} from "react-router-dom";
+import {useToasts} from "react-toast-notifications";
 
 function SignIn(props) {
+    const {addToast} = useToasts();
     const {setAuthData} = useContext(authContext);
     const history = useHistory();
     const [user, setUser] = useState({
@@ -28,7 +30,7 @@ function SignIn(props) {
                 window.location.reload();
             })
             .catch(err => {
-
+                addToast("Invalid credentials", {appearance: "error"})
             })
     };
 
@@ -45,7 +47,7 @@ function SignIn(props) {
                                     <i className="fas fa-user"/>
                                 </InputGroup.Text>
                             </InputGroup.Prepend>
-                            <Form.Control placeholder="Username"
+                            <Form.Control placeholder="Enter your username here..."
                                           value={user.username} onChange={handleChange("username")}/>
                         </InputGroup>
                     </Form.Group>
@@ -57,12 +59,12 @@ function SignIn(props) {
                                 <InputGroup.Text><i className="fas fa-lock"/></InputGroup.Text>
                             </InputGroup.Prepend>
                             <Form.Control value={user.password} onChange={handleChange("password")} type="password"
-                                          placeholder="UtEc56d2XY..."/>
+                                          placeholder="Enter your password here..."/>
                         </InputGroup>
                     </Form.Group>
 
-                    <div className={"d-flex flex-column align-items-center"}>
-                        <Button type="submit" className={"mb-3"}>
+                    <div className={"text-center"}>
+                        <Button variant={"outline-primary"} type="submit" className={"mb-3"}>
                             Sign in
                         </Button>
                     </div>

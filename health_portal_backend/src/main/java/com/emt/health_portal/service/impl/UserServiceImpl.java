@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(userDto.getUsername());
         user.setIsCompanyOwner(userDto.getIsCompanyOwner());
+        user.setHasCreatedCompany(false);
 
         mapDtoToEntityUser(user, userDto);
         return userRepository.save(user);
@@ -71,6 +72,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signInUser(UserLoginDto userDto) {
         return userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPassword()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
     private void mapDtoToEntityUser(User user, UserDto userDto) {

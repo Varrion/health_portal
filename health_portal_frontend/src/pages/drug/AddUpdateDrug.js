@@ -9,20 +9,22 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Dropzone from "react-dropzone";
 import Col from "react-bootstrap/Col";
+import {useToasts} from "react-toast-notifications";
 
 function AddUpdateDrug(props) {
+    const {addToast} = useToasts();
     const history = useHistory();
     const [drug, setDrug] = useState({
-        name: props.drug?.name ?? "",
-        description: props.drug?.description ?? "",
-        validFrom: new Date(props.drug?.validFrom) ?? new Date(),
-        validTo: new Date(props.drug?.validTo) ?? new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        price: props.drug?.price ?? 0,
-        quantity: props.drug?.quantity ?? 0,
-        categoryId: props.categoryid ?? 0,
-        cures: props.drug?.cures ?? ""
+        name: props.drug ? props.drug.name : "",
+        description: props.drug ? props.drug.description : "",
+        validFrom: props.drug ? new Date(props.drug.validFrom) : new Date(),
+        validTo: props.drug ? new Date(props.drug.validTo) : new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        price: props.drug ? props.drug.price : 0,
+        quantity: props.drug ? props.drug.quantity : 0,
+        categoryId: props.drug ? props.drug.category.id : props.categoryid,
+        cures: props.drug ? props.drug.cures : ""
     })
-    const [drugPicture, setDrugPicture] = useState(props.drug?.picture ?? null);
+    const [drugPicture, setDrugPicture] = useState(props.drug ? props.drug.picture : null);
 
     const handleChange = name => event => {
         setDrug({...drug, [name]: event.target.value});
@@ -38,16 +40,21 @@ function AddUpdateDrug(props) {
         formData.append("drugPicture", drugPicture);
 
         if (!props.drug) {
+            console.log("test", drug);
             AddDrug(formData)
                 .then(r => {
                     history.push(`/drug/${r.data.id}`)
+                    addToast("Medicine successfully created", {appearance: "success"})
                 })
                 .catch(err => {
 
                 })
         } else {
             EditDrug(props.drug.id, formData)
-                .then(() => props.onHide())
+                .then(() => {
+                    addToast("Drug successfully updated", {appearance: "success"})
+                    props.onHide();
+                })
         }
     };
 

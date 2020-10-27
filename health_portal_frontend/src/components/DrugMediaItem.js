@@ -19,7 +19,7 @@ function DrugMediaItem(props) {
                     <p>
                         {props.text}
                     </p>
-                    <div className={"text-right"}>
+                    <div className={"text-right mr-3"}>
                         <Link to={`/drug/${props.id}`}>More details...</Link>
                     </div>
                 </Media.Body>

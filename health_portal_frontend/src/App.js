@@ -37,7 +37,7 @@ function App() {
 
     return (
         <Router>
-            <Header loggedUser={user}/>
+            <Header profile={user}/>
             <div className="container mt-4 mb-4 App">
                 <Switch>
                     <Route path={"/login"}>
@@ -46,9 +46,9 @@ function App() {
                     <Route path={"/register"}>
                         {!user ? <SignUp/> : <Redirect to={"/"}/>}
                     </Route>
-                    <PrivateRoute exact path={"/company/add"} component={AddUpdateCompany}/>
+                    <PrivateRoute exact path={"/company/admin"} component={AddUpdateCompany} profile={user}/>
                     <Route exact path={"/company/:companyId"}>
-                        <CompanyDetails/>
+                        <CompanyDetails profile={user}/>
                     </Route>
                     <Route exact path={"/drug/:drugId"}>
                         <DrugDetails profile={user}/>

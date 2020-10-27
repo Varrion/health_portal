@@ -113,8 +113,8 @@ function SignUp() {
                             </section>
                         )}
                     </Dropzone>
-                    <div>
-                        <Button variant="primary" type="submit">
+                    <div className={"text-center mt-3"}>
+                        <Button variant="outline-primary" type="submit">
                             Sign Up
                         </Button>
                     </div>

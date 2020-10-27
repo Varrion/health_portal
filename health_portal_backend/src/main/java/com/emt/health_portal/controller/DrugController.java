@@ -1,8 +1,10 @@
 package com.emt.health_portal.controller;
 
+import com.emt.health_portal.model.Company;
 import com.emt.health_portal.model.Drug;
 import com.emt.health_portal.model.dto.ChargeRequest;
 import com.emt.health_portal.model.dto.DrugDto;
+import com.emt.health_portal.service.CompanyService;
 import com.emt.health_portal.service.DrugService;
 import com.emt.health_portal.service.StripeService;
 import com.stripe.exception.StripeException;
@@ -13,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -22,10 +23,12 @@ import java.util.Optional;
 public class DrugController {
     private final DrugService drugService;
     private final StripeService stripeService;
+    private final CompanyService companyService;
 
-    public DrugController(DrugService drugService, StripeService stripeService) {
+    public DrugController(DrugService drugService, StripeService stripeService, CompanyService companyService) {
         this.drugService = drugService;
         this.stripeService = stripeService;
+        this.companyService = companyService;
     }
 
     @GetMapping
@@ -38,6 +41,14 @@ public class DrugController {
         return drugService.getDrugsByCategory(categoryId);
     }
 
+    @GetMapping("/company/{companyId}")
+    List<Drug> getDrugsByCompany(@PathVariable Long companyId) {
+        Set<Company> companySet = new HashSet<>();
+        Company company = companyService.findById(companyId);
+        companySet.add(company);
+
+        return drugService.getDrugsByCompany(companySet);
+    }
 
     @GetMapping("{id}")
     Drug getDrugDetails(@PathVariable Long id) {

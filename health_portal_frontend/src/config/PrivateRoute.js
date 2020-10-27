@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import {authContext} from "./Authentication";
 
-const PrivateRoute = ({component: Component, ...rest}) => {
+const PrivateRoute = ({component: Component, profile, ...rest}) => {
     const {auth} = useContext(authContext);
 
     return (
@@ -10,7 +10,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
             {...rest}
             render={routeProps => {
                 return auth ? (
-                    <Component {...routeProps} />
+                    <Component {...routeProps} profile={profile}/>
                 ) : (
                     <Redirect to={{
                         pathname: "/login",

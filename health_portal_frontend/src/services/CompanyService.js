@@ -20,4 +20,25 @@ async function DeleteCompany(companyId) {
     return axios.delete(`company/${companyId}`);
 }
 
-export {GetAllCompanies, GetCompanyDetails, AddCompany, EditCompany, DeleteCompany}
+async function GetCompanyByOwner(username) {
+    return axios.get(`company/owner/${username}`);
+}
+
+async function UpdateCompanyDrugs(username, drugId) {
+    return axios.post(`company/drugs`, null, {
+        params: {
+            username: username,
+            drugId: drugId
+        }
+    })
+}
+
+export {
+    GetAllCompanies,
+    GetCompanyDetails,
+    AddCompany,
+    EditCompany,
+    GetCompanyByOwner,
+    DeleteCompany,
+    UpdateCompanyDrugs
+}

@@ -1,6 +1,7 @@
 package com.emt.health_portal.service.impl;
 
 import com.emt.health_portal.model.Category;
+import com.emt.health_portal.model.Company;
 import com.emt.health_portal.model.Drug;
 import com.emt.health_portal.model.dto.ChargeRequest;
 import com.emt.health_portal.model.dto.DrugDto;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class DrugServiceImpl implements DrugService, StripeService {
@@ -54,6 +56,11 @@ public class DrugServiceImpl implements DrugService, StripeService {
 
     @Override
     public void deleteById(Long id) {
+        Drug drug = findById(id);
+        for (Company company : drug.getCompanies()) {
+            company.getDrugs().remove(drug);
+        }
+
         drugRepository.deleteById(id);
     }
 
@@ -90,8 +97,8 @@ public class DrugServiceImpl implements DrugService, StripeService {
     }
 
     @Override
-    public List<Drug> getDrugsByCompany(Long companyId) {
-        return null;
+    public List<Drug> getDrugsByCompany(Set<Company> companySet) {
+        return drugRepository.findAllByCompaniesIn(companySet);
     }
 
     private void mapDtoToEntityDrug(Drug drug, DrugDto drugDto) {

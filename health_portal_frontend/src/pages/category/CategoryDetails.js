@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {GetCategoryDetails} from "../../services/CategoryService";
-import {useParams} from "react-router-dom";
+import {DeleteCategory, GetCategoryDetails} from "../../services/CategoryService";
+import {useParams, useHistory} from "react-router-dom";
 import {Card} from "react-bootstrap";
 import AddUpdateDrug from "../drug/AddUpdateDrug";
 import Button from "react-bootstrap/Button";
 import {GetAllDrugsByCategory} from "../../services/DrugService";
 import DrugCardItem from "../../components/DrugCardItem";
+import {useToasts} from "react-toast-notifications";
 
 function CategoryDetails(props) {
+    const {addToast} = useToasts();
     const {categoryId} = useParams();
+    const history = useHistory();
     const [category, setCategory] = useState(null);
     const [categoryDrugs, setCategoryDrugs] = useState(null);
     const [showAddDrugModal, setShowAddDrugModal] = useState(false);
@@ -24,11 +27,19 @@ function CategoryDetails(props) {
             })
     }, [showAddDrugModal])
 
+    const handleDeleteCategory = () => {
+        DeleteCategory(categoryId)
+            .then(res => {
+                addToast("Category successfully deleted", {appearance: "error"});
+                history.push("/");
+            })
+    }
+
     return (
         <Card className={"pl-5 pt-2"}>
             {category && <>
                 <Card.Title className={"text-center"}>
-                    Category: {category.name}
+                    <h3>{category.name}</h3>
                 </Card.Title>
                 <Card.Body>
                     <p>{category.description}</p>
@@ -47,6 +58,9 @@ function CategoryDetails(props) {
                     </div>
                     {props.profile && props.profile.isCompanyOwner &&
                     <div className={"mt-4 text-right"}>
+                        <Button variant={"outline-danger mr-3"} onClick={handleDeleteCategory}>
+                            Delete Category
+                        </Button>
                         <Button variant={"outline-primary"} onClick={() => setShowAddDrugModal(true)}>
                             Add Drug
                         </Button>
