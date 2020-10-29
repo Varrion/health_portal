@@ -59,7 +59,7 @@ function App() {
                     </Route>
                     <PrivateRoute exact path={"/category/:categoryId/edit"} component={AddUpdateCategory}/>
                     <Route exact path={"/user/:username"}>
-                        <UserDetails/>
+                        <UserDetails profile={user}/>
                     </Route>
                     <Route path="*">
                         <Redirect to={"/"}/>

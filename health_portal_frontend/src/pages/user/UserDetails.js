@@ -53,6 +53,7 @@ function UserDetails(props) {
                                 <i className="fas fa-user"/> Participant
                             </Badge>}
 
+                        {props.profile && user.username === props.profile.username &&
                         <div className={"text-center mt-3"}>
                             <Button onClick={() => setShowUpdateProfile(true)} className={"mr-4"}
                                     variant={"outline-warning"}>
@@ -61,7 +62,7 @@ function UserDetails(props) {
                             <Button variant={"outline-danger"} onClick={handleDelete}>
                                 <i className="fas fa-trash-alt"/> Delete
                             </Button>
-                        </div>
+                        </div>}
                     </div>
                     <div className={"col-md-3"}>
                         <Card.Img className={"rounded-content"}
